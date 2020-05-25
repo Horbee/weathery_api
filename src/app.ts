@@ -9,7 +9,7 @@ envConfig({ path: "./config/config.env" });
 
 const app = express();
 
-const port = process.env.SERVER_PORT || 5000;
+const port = process.env.PORT || 5000;
 
 // Init middlewares
 app.use(express.json());
