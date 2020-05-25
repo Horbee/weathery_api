@@ -16,7 +16,7 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("x-auth-token");
+  const token: string = req.header("Authorization");
 
   if (!token) {
     return res.status(401).send(errorResponse(ErrorMessages.NO_TOKEN));
@@ -24,7 +24,7 @@ export const authenticate = async (
 
   try {
     const decoded = (await jwt.verify(
-      token,
+      token.split("Bearer ")[1],
       process.env.JWT_SECRET!
     )) as TokenPayload;
 

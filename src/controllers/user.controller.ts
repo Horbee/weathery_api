@@ -61,7 +61,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const token = await createWeatheryToken(user);
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       data: token
     });
