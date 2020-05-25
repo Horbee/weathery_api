@@ -20,12 +20,12 @@ export const swaggerDocument = {
   },
   servers: [
     {
-      url: "http://localhost:5000",
-      description: "Local server"
-    },
-    {
       url: "https://weathery-api.herokuapp.com",
       description: "DEV Env on Heroku"
+    },
+    {
+      url: "http://localhost:5000",
+      description: "Local server"
     }
   ],
   components: {
