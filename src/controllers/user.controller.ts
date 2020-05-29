@@ -66,6 +66,7 @@ export const loginUser = async (req: Request, res: Response) => {
       data: token
     });
   } catch (err) {
+    console.error(err);
     return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
   }
 };
