@@ -3,13 +3,7 @@ import jwt from "jsonwebtoken";
 
 import { ErrorMessages } from "../constants/errorMessages";
 import { errorResponse } from "../responses/errorResponse";
-
-interface TokenPayload {
-  appId: string;
-  user: {
-    id: string;
-  };
-}
+import { TokenPayload, verify } from "../utils/tokenUtils";
 
 export const authenticate = async (
   req: any,
@@ -23,11 +17,7 @@ export const authenticate = async (
   }
 
   try {
-    const decoded = (await jwt.verify(
-      token.split("Bearer ")[1],
-      process.env.JWT_SECRET!
-    )) as TokenPayload;
-
+    const decoded = (await verify(token.split("Bearer ")[1])) as TokenPayload;
     req.user = decoded.user;
 
     next();

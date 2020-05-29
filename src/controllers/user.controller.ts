@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
-import { createWeatheryToken } from "../utils/tokenUtils";
+import { sign } from "../utils/tokenUtils";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -26,7 +26,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     await user.save();
 
-    const token = await createWeatheryToken(user);
+    const token = await sign(user);
 
     return res.status(201).json({
       success: true,
@@ -59,7 +59,7 @@ export const loginUser = async (req: Request, res: Response) => {
         .json(errorResponse(ErrorMessages.INVALID_CREDENTIALS));
     }
 
-    const token = await createWeatheryToken(user);
+    const token = await sign(user);
 
     return res.status(200).json({
       success: true,
