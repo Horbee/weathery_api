@@ -1,10 +1,11 @@
 import { check } from "express-validator";
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
   password: string;
+  city: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -23,18 +24,19 @@ const UserSchema = new Schema<UserModel>({
     type: String,
     required: true
   },
+  city: String,
   created_at: { type: Date, default: Date.now },
   updated_at: Date
 });
 
 export const userCreateValidation = [
   check("name", "Name can't be empty").not().isEmpty().trim().escape(),
-  check("email", "Email is invalid").isEmail().normalizeEmail(),
+  check("email", "Email is invalid").isEmail(),
   check("password", "Password is invalid").not().isEmpty()
 ];
 
 export const userLoginValidation = [
-  check("email", "Email is invalid").isEmail().normalizeEmail(),
+  check("email", "Email is invalid").isEmail(),
   check("password", "Password is invalid").not().isEmpty()
 ];
 
