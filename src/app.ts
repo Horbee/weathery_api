@@ -1,3 +1,4 @@
+import cors from "cors";
 import { config as envConfig } from "dotenv";
 import express from "express";
 import morgan from "morgan";
@@ -14,7 +15,15 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
+const allowedHosts = process.env.ALLOWED_HOSTS || "";
+
+const corsOptions = {
+  origin: allowedHosts.split(";")
+};
+
 // Init middlewares
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 if (process.env.NODE_ENV === "development") {
