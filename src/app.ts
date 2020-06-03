@@ -1,5 +1,6 @@
 import { config as envConfig } from "dotenv";
 import express from "express";
+import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
 import { connectDB } from "./db";
@@ -15,6 +16,17 @@ const port = process.env.PORT || 5000;
 
 // Init middlewares
 app.use(express.json());
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+} else {
+  app.use(
+    morgan("combined", {
+      skip: (req, res) => res.statusCode < 400
+    })
+  );
+}
+
 app.use("/swagger-ui", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health Check
