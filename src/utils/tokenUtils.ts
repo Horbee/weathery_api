@@ -1,5 +1,6 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
+import { AppConfig } from "../config/appconfig";
 import { UserModel } from "../models/User";
 
 export interface TokenPayload {
@@ -23,26 +24,26 @@ export const sign = async (user: UserModel) => {
   }
 
   const signOptions: SignOptions = {
-    issuer: process.env.APP_NAME,
+    issuer: AppConfig.appName,
     subject: user.email,
-    audience: process.env.APP_ID,
+    audience: AppConfig.appID,
     expiresIn: "12h",
     algorithm: "RS256"
   };
 
-  return jwt.sign(payload, process.env.JWT_PRIVATE_KEY!, signOptions);
+  return jwt.sign(payload, AppConfig.jwtPrivateKey, signOptions);
 };
 
 export const verify = async (token: string, user: UserModel) => {
   const verifyOptions: VerifyOptions = {
-    issuer: process.env.APP_NAME,
-    audience: process.env.APP_ID,
+    issuer: AppConfig.appName,
+    audience: AppConfig.appID,
     subject: user.email,
     ignoreExpiration: false,
     algorithms: ["RS256"]
   };
 
-  return jwt.verify(token, process.env.JWT_PUBLIC_KEY!, verifyOptions);
+  return jwt.verify(token, AppConfig.jwtPublicKey, verifyOptions);
 };
 
 export const decode = (token: string) => {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { MongooseDocument } from "mongoose";
 
+import { AppConfig } from "../config/appconfig";
 import { ErrorMessages } from "../constants/errorMessages";
 import { errorResponse } from "../responses/errorResponse";
 
@@ -13,7 +14,7 @@ export const getWeatherInfoByCity = async (req: Request, res: Response) => {
   try {
     const city = req.params.city;
 
-    const weatherApiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_API}&units=metric`;
+    const weatherApiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${AppConfig.openweatherAPI}&units=metric`;
 
     try {
       const response = await axios.get(weatherApiURL);

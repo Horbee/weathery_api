@@ -1,24 +1,19 @@
 import cors from "cors";
-import { config as envConfig } from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
 import { startApp } from "./cluster";
+import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
 import { swaggerDocument } from "./openAPI/swagger";
 import { userRoutes } from "./routes/user.routes";
 import { weatherRoutes } from "./routes/weather.routes";
 
-envConfig({ path: "./config/config.env" });
-
 const app = express();
 
-const port = process.env.PORT || 5000;
-const allowedHosts = process.env.ALLOWED_HOSTS || "";
-
 const corsOptions = {
-  origin: allowedHosts.split(";")
+  origin: AppConfig.allowedHosts.split(";")
 };
 
 // Init middlewares
@@ -26,7 +21,7 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-if (process.env.NODE_ENV === "development") {
+if (AppConfig.nodeEnv === "development") {
   app.use(morgan("dev"));
 } else {
   app.use(
@@ -47,13 +42,13 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", userRoutes);
 app.use("/api/weather", weatherRoutes);
 
-startApp(process.env.CLUSTER_MODE === "true" ?? false, () => {
+startApp(AppConfig.clusterMode, () => {
   // connect Mongo DB
   connectDB();
   // start app
-  app.listen(port, () =>
+  app.listen(AppConfig.port, () =>
     console.log(
-      `Server started in ${process.env.NODE_ENV} mode, on port ${port}, Worker PID: ${process.pid}`
+      `Server started in ${AppConfig.nodeEnv} mode, on port ${AppConfig.port}, Worker PID: ${process.pid}`
     )
   );
 });
