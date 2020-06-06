@@ -23,7 +23,7 @@ export const authenticate = async (
     const userDoc = await User.findById(decoded.user.id);
 
     if (!userDoc) {
-      return res.status(401).send(errorResponse(ErrorMessages.INVALID_TOKEN));
+      throw new Error();
     }
 
     (await verify(token, userDoc)) as TokenPayload;
