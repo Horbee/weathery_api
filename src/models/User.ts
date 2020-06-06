@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
@@ -8,6 +9,7 @@ export interface UserModel extends mongoose.Document {
   city: string;
   created_at: Date;
   updated_at: Date;
+  comparePasswords: (plainPassword: string) => Promise<boolean>;
 }
 
 const UserSchema = new Schema<UserModel>({
@@ -28,6 +30,20 @@ const UserSchema = new Schema<UserModel>({
   created_at: { type: Date, default: Date.now },
   updated_at: Date
 });
+
+UserSchema.pre<UserModel>("save", async function () {
+  console.log(this.password);
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+UserSchema.pre<UserModel>("updateOne", function () {
+  this.set({ updated_at: new Date() });
+});
+
+UserSchema.methods.comparePasswords = async function (plainPassword: string) {
+  return bcrypt.compare(plainPassword, this.password);
+};
 
 export const userCreateValidation = [
   check("name", "Name can't be empty").not().isEmpty().trim().escape(),

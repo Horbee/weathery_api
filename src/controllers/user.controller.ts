@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 
 import { ErrorMessages } from "../constants/errorMessages";
@@ -15,16 +14,11 @@ export const createUser = async (req: Request, res: Response) => {
         .status(400)
         .json(errorResponse(ErrorMessages.USER_ALREADY_REGISTERED));
     }
-    const user = new User({
+    const user = await User.create({
       name,
       email,
       password
     });
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
-    await user.save();
 
     const token = await sign(user);
 
@@ -45,26 +39,20 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
 
-    if (!user) {
-      return res
-        .status(400)
-        .json(errorResponse(ErrorMessages.INVALID_CREDENTIALS));
+    if (user) {
+      if (await user.comparePasswords(password)) {
+        const token = await sign(user);
+
+        return res.status(200).json({
+          success: true,
+          data: token
+        });
+      }
     }
 
-    const result = await bcrypt.compare(password, user.password);
-
-    if (!result) {
-      return res
-        .status(400)
-        .json(errorResponse(ErrorMessages.INVALID_CREDENTIALS));
-    }
-
-    const token = await sign(user);
-
-    return res.status(200).json({
-      success: true,
-      data: token
-    });
+    return res
+      .status(400)
+      .json(errorResponse(ErrorMessages.INVALID_CREDENTIALS));
   } catch (err) {
     console.error(err);
     return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
