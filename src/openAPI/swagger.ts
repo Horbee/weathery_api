@@ -1,6 +1,11 @@
 import { modelDefinitions } from "./definitions.swagger";
 import { getHealth } from "./health.swagger";
-import { createUser, loginUser } from "./user.swagger";
+import {
+  createUser,
+  forgotPassword,
+  loginUser,
+  resetPassword
+} from "./user.swagger";
 import { getWeather } from "./weather.swagger";
 
 export const swaggerDocument = {
@@ -48,6 +53,12 @@ export const swaggerDocument = {
     },
     "/api/auth/login": {
       post: loginUser
+    },
+    "/api/auth/forgotpassword": {
+      post: forgotPassword
+    },
+    "/api/auth/resetpassword": {
+      post: resetPassword
     },
     "/health": {
       get: getHealth

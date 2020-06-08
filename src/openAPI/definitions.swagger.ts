@@ -32,6 +32,32 @@ export const modelDefinitions = {
       data: { type: "string", description: "Token" }
     }
   },
+  ForgotPassword: {
+    type: "object",
+    properties: {
+      email: { type: "string" }
+    }
+  },
+  ForgotPasswordResponse: {
+    type: "object",
+    properties: {
+      success: { type: "boolean" },
+      data: { type: "string", description: "Reset Link" }
+    }
+  },
+  ResetPassword: {
+    type: "object",
+    properties: {
+      password: { type: "string" }
+    }
+  },
+  GenericSuccessResponse: {
+    type: "object",
+    properties: {
+      success: { type: "boolean" },
+      data: { type: "string" }
+    }
+  },
   ErrorResponse: {
     type: "object",
     properties: {
