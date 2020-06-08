@@ -12,5 +12,10 @@ export const AppConfig = {
   jwtPrivateKey: process.env.JWT_PRIVATE_KEY || "private",
   jwtPublicKey: process.env.JWT_PUBLIC_KEY || "public",
   allowedHosts: process.env.ALLOWED_HOSTS || "http://localhost:3000",
-  clusterMode: process.env.CLUSTER_MODE === "true" || false
+  clusterMode: process.env.CLUSTER_MODE === "true" || false,
+  mailSystem: process.env.MAIL_SYSTEM === "true" || false,
+  mailAPIKey: process.env.MAIL_API || "",
+  mailFrom: process.env.MAIL_FROM || "",
+  forgotPasswordMailTemplate: process.env.FORGOT_PW_TEMPLATE || "",
+  apiUrl: process.env.API_URL || "http://localhost:5000"
 };

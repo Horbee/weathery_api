@@ -3,7 +3,11 @@ import { NextFunction, Response } from "express";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
-import { decode, TokenPayload, verify } from "../utils/tokenUtils";
+import {
+  AccessTokenPayload,
+  decode,
+  verifyAccessToken
+} from "../utils/tokenUtils";
 
 export const authenticate = async (
   req: any,
@@ -18,7 +22,7 @@ export const authenticate = async (
 
   try {
     const token = bearerToken.split("Bearer ")[1];
-    const decoded = (await decode(token)) as TokenPayload;
+    const decoded = (await decode(token)) as AccessTokenPayload;
 
     const userDoc = await User.findById(decoded.user.id);
 
@@ -26,7 +30,7 @@ export const authenticate = async (
       throw new Error();
     }
 
-    (await verify(token, userDoc)) as TokenPayload;
+    await verifyAccessToken(token, userDoc);
 
     req.user = userDoc;
 

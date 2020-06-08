@@ -12,7 +12,7 @@ interface AuthenticatedRequest extends Request {
 
 export const getWeatherInfoByCity = async (req: Request, res: Response) => {
   try {
-    const city = req.params.city;
+    const { city } = req.params;
 
     const weatherApiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${AppConfig.openweatherAPI}&units=metric`;
 

@@ -2,6 +2,9 @@ import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
+import { sendForgotPasswordMail } from "../mailer/mailer";
+import { signForgotPasswordToken } from "../utils/tokenUtils";
+
 export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
@@ -10,6 +13,7 @@ export interface UserModel extends mongoose.Document {
   created_at: Date;
   updated_at: Date;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
+  forgotPassword: () => Promise<void>;
 }
 
 const UserSchema = new Schema<UserModel>({
@@ -32,7 +36,6 @@ const UserSchema = new Schema<UserModel>({
 });
 
 UserSchema.pre<UserModel>("save", async function () {
-  console.log(this.password);
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -45,6 +48,11 @@ UserSchema.methods.comparePasswords = async function (plainPassword: string) {
   return bcrypt.compare(plainPassword, this.password);
 };
 
+UserSchema.methods.forgotPassword = async function () {
+  const token = await signForgotPasswordToken(this);
+  await sendForgotPasswordMail(this.email, this.name, token);
+};
+
 export const userCreateValidation = [
   check("name", "Name can't be empty").not().isEmpty().trim().escape(),
   check("email", "Email is invalid").isEmail(),
@@ -53,6 +61,14 @@ export const userCreateValidation = [
 
 export const userLoginValidation = [
   check("email", "Email is invalid").isEmail(),
+  check("password", "Password is invalid").not().isEmpty()
+];
+
+export const userForgotPasswordValidation = [
+  check("email", "Email is invalid").isEmail()
+];
+
+export const userResetPasswordValidation = [
   check("password", "Password is invalid").not().isEmpty()
 ];
 
