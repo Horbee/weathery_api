@@ -2,6 +2,8 @@
 
 Weathery API is a NodeJS application, which fetches weather information from OpenweatherAPI.
 
+Available routes: http://localhost:5000/swagger-ui
+
 ## Getting Started
 
 To get the project running locally,
