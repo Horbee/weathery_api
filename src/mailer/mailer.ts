@@ -19,7 +19,7 @@ export const sendForgotPasswordMail = async (
     templateId: templates.forgot_password,
     dynamic_template_data: {
       name: name,
-      url: `${AppConfig.apiUrl}/api/auth/resetpassword?token=${token}`
+      url: `${AppConfig.clientUrl}/resetpassword?token=${token}`
     }
   };
 

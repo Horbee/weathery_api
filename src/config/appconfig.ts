@@ -17,5 +17,5 @@ export const AppConfig = {
   mailAPIKey: process.env.MAIL_API || "",
   mailFrom: process.env.MAIL_FROM || "",
   forgotPasswordMailTemplate: process.env.FORGOT_PW_TEMPLATE || "",
-  apiUrl: process.env.API_URL || "http://localhost:5000"
+  clientUrl: process.env.CLIENT_URL || "http://localhost:3000"
 };

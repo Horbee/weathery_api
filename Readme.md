@@ -39,7 +39,7 @@ MAIL_SYSTEM=true    # turn on / off sending emails
 MAIL_API=           # sendgrid API key
 MAIL_FROM=          # sendgrid verified sender
 FORGOT_PW_TEMPLATE= # id of the forgot password email template
-API_URL=http://localhost:5000 # the actual API URL
+CLIENT_URL=http://localhost:3000 # the actual CLIENT URL
 
 ```
 
