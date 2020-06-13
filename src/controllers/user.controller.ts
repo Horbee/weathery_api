@@ -7,10 +7,7 @@ import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
 import {
-  decode,
-  ForgotPasswordTokenPayload,
-  signAccessToken,
-  verifyForgotPasswordToken
+    decode, ForgotPasswordTokenPayload, signAccessToken, verifyForgotPasswordToken
 } from "../utils/tokenUtils";
 
 export const createUser = async (req: Request, res: Response) => {

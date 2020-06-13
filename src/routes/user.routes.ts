@@ -1,16 +1,11 @@
 import express from "express";
 
 import {
-  createUser,
-  forgotPassword,
-  loginUser,
-  resetPassword
+    createUser, forgotPassword, loginUser, resetPassword
 } from "../controllers/user.controller";
 import {
-  userCreateValidation,
-  userForgotPasswordValidation,
-  userLoginValidation,
-  userResetPasswordValidation
+    userCreateValidation, userForgotPasswordValidation, userLoginValidation,
+    userResetPasswordValidation
 } from "../models/User";
 import { validationErrors } from "../responses/validationError";
 

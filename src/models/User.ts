@@ -3,6 +3,7 @@ import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
 import { sendForgotPasswordMail } from "../mailer/mailer";
+import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
 
 export interface UserModel extends mongoose.Document {
@@ -10,6 +11,7 @@ export interface UserModel extends mongoose.Document {
   email: string;
   password: string;
   city: string;
+  loginMethod: LoginMethods;
   created_at: Date;
   updated_at: Date;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
@@ -26,7 +28,8 @@ const UserSchema = new Schema<UserModel>({
     required: true,
     unique: true
   },
-  password: {
+  password: String,
+  loginMethod: {
     type: String,
     required: true
   },
@@ -36,8 +39,10 @@ const UserSchema = new Schema<UserModel>({
 });
 
 UserSchema.pre<UserModel>("save", async function () {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  if (this.loginMethod === "regular") {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 });
 
 UserSchema.pre<UserModel>("updateOne", function () {

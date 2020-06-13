@@ -3,11 +3,7 @@ import { NextFunction, Response } from "express";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
-import {
-  AccessTokenPayload,
-  decode,
-  verifyAccessToken
-} from "../utils/tokenUtils";
+import { AccessTokenPayload, decode, verifyAccessToken } from "../utils/tokenUtils";
 
 export const authenticate = async (
   req: any,

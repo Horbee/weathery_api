@@ -17,5 +17,7 @@ export const AppConfig = {
   mailAPIKey: process.env.MAIL_API || "",
   mailFrom: process.env.MAIL_FROM || "",
   forgotPasswordMailTemplate: process.env.FORGOT_PW_TEMPLATE || "",
-  clientUrl: process.env.CLIENT_URL || "http://localhost:3000"
+  clientUrl: process.env.CLIENT_URL || "http://localhost:3000",
+  googleClientID: process.env.GOOGLE_CLIENT_ID || "",
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
 };
