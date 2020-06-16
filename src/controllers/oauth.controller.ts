@@ -20,12 +20,6 @@ export const loginOAuthUser = (loginMethod: LoginMethods) => async (
       // User is registered with other loginmethod
       return res.status(400).json(errorResponse(ErrorMessages.USER_DIFF_LOGIN));
     }
-    // Sign and return token
-    const token = await signAccessToken(user);
-    return res.status(201).json({
-      success: true,
-      data: token
-    });
   } else {
     // Create new User
     user = await User.create({
@@ -33,10 +27,11 @@ export const loginOAuthUser = (loginMethod: LoginMethods) => async (
       email,
       loginMethod
     });
-    const token = await signAccessToken(user);
-    return res.status(201).json({
-      success: true,
-      data: token
-    });
   }
+  // Sign and return token
+  const token = await signAccessToken(user);
+  return res.status(201).json({
+    success: true,
+    data: token
+  });
 };

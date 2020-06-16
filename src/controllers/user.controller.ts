@@ -7,7 +7,10 @@ import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
 import {
-    decode, ForgotPasswordTokenPayload, signAccessToken, verifyForgotPasswordToken
+  decode,
+  ForgotPasswordTokenPayload,
+  signAccessToken,
+  verifyForgotPasswordToken
 } from "../utils/tokenUtils";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -22,7 +25,8 @@ export const createUser = async (req: Request, res: Response) => {
     const user = await User.create({
       name,
       email,
-      password
+      password,
+      loginMethod: "regular"
     });
 
     const token = await signAccessToken(user);
@@ -45,6 +49,12 @@ export const loginUser = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (user) {
+      if (user.loginMethod !== "regular") {
+        // User is registered with other loginmethod
+        return res
+          .status(400)
+          .json(errorResponse(ErrorMessages.USER_DIFF_LOGIN));
+      }
       if (await user.comparePasswords(password)) {
         const token = await signAccessToken(user);
 
