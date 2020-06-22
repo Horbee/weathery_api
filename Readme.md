@@ -19,6 +19,8 @@ Before starting the project, you should set the required environment variables. 
 
 Rename this file to: `config.env` and fill the required variables. The application will look for that file and sets up the AppConfig object.
 
+`cp example.config.env config.env`
+
 ```env
 NODE_ENV=development  # environment setup
 PORT=5000             # server port
@@ -26,6 +28,9 @@ MONGO_URI=            # MongoDB database URI
 OPENWEATHER_API=      # Openweather API key
 ALLOWED_HOSTS=http://localhost:3000; # For CORS setup: list of urls separated with ";"
 CLUSTER_MODE=false    # The cluster module allows creation of child processes that all share server ports and take advantage of multi-core systems.
+
+# For Swagger
+API_URL=http://localhost:5000
 
 # JWT
 APP_ID=8df5eb5092
@@ -40,6 +45,10 @@ MAIL_API=           # sendgrid API key
 MAIL_FROM=          # sendgrid verified sender
 FORGOT_PW_TEMPLATE= # id of the forgot password email template
 CLIENT_URL=http://localhost:3000 # the actual CLIENT URL
+
+# Google Oauth
+CLIENT_ID=
+CLIENT_SECRET=
 
 ```
 

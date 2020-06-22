@@ -1,11 +1,6 @@
 import { modelDefinitions } from "./definitions.swagger";
 import { getHealth } from "./health.swagger";
-import {
-  createUser,
-  forgotPassword,
-  loginUser,
-  resetPassword
-} from "./user.swagger";
+import { createUser, forgotPassword, loginUser, resetPassword } from "./user.swagger";
 import { getWeather } from "./weather.swagger";
 
 export const swaggerDocument = {
@@ -25,12 +20,8 @@ export const swaggerDocument = {
   },
   servers: [
     {
-      url: "https://weathery-api.herokuapp.com",
-      description: "DEV Env on Heroku"
-    },
-    {
-      url: "http://localhost:5000",
-      description: "Local server"
+      url: process.env.API_URL || "http://localhost:5000",
+      description: "Current Environment"
     }
   ],
   components: {
