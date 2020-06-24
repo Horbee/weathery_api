@@ -79,7 +79,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
   const user = await User.findOne({ email });
 
-  if (user && AppConfig.mailSystem) {
+  if (user?.loginMethod === "regular" && AppConfig.mailSystem) {
     await user.forgotPassword();
   }
 
@@ -112,7 +112,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
       return res.status(200).json({
         success: true,
-        data: "Password reset successfully."
+        data: "Password reset successful."
       });
     }
 
