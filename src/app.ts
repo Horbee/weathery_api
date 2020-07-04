@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
+import serverless from "serverless-http";
 import swaggerUi from "swagger-ui-express";
 
 import { startApp } from "./cluster";
@@ -44,7 +45,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/oauth", oauthRoutes);
 app.use("/api/weather", weatherRoutes);
 
-startApp(AppConfig.clusterMode, () => {
+/*startApp(AppConfig.clusterMode, () => {
   // connect Mongo DB
   connectDB();
   // start app
@@ -53,4 +54,8 @@ startApp(AppConfig.clusterMode, () => {
       `Server started in ${AppConfig.nodeEnv} mode, on port ${AppConfig.port}, Worker PID: ${process.pid}`
     )
   );
-});
+});*/
+
+connectDB();
+
+module.exports.handler = serverless(app);

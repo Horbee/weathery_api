@@ -35,8 +35,8 @@ export const signAccessToken = async (user: UserModel) => {
     issuer: AppConfig.appName,
     subject: user.email,
     audience: AppConfig.appID,
-    expiresIn: "12h",
-    algorithm: "RS256"
+    expiresIn: "12h"
+    // algorithm: "RS256"
   };
 
   return jwt.sign(payload, AppConfig.jwtPrivateKey, signOptions);
@@ -47,8 +47,8 @@ export const verifyAccessToken = async (token: string, user: UserModel) => {
     issuer: AppConfig.appName,
     audience: AppConfig.appID,
     subject: user.email,
-    ignoreExpiration: false,
-    algorithms: ["RS256"]
+    ignoreExpiration: false
+    // algorithms: ["RS256"]
   };
 
   return jwt.verify(token, AppConfig.jwtPublicKey, verifyOptions);
