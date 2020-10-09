@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "data:import": "ts-node src/seeds/cityData.ts"
   },
   "keywords": [],
   "author": "Norbert Horgas",
