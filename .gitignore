@@ -2,3 +2,5 @@
 /client
 /dist
 config.env
+docs
+.serverless
