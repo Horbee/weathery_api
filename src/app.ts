@@ -7,6 +7,7 @@ import { startApp } from "./cluster";
 import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
 import { swaggerDocument } from "./openAPI/swagger";
+import { cityRoutes } from "./routes/city.routes";
 import { oauthRoutes } from "./routes/oauth.routes";
 import { userRoutes } from "./routes/user.routes";
 import { weatherRoutes } from "./routes/weather.routes";
@@ -43,6 +44,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", userRoutes);
 app.use("/api/oauth", oauthRoutes);
 app.use("/api/weather", weatherRoutes);
+app.use("/api/cities", cityRoutes);
 
 startApp(AppConfig.clusterMode, () => {
   // connect Mongo DB
