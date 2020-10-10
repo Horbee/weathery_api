@@ -9,7 +9,7 @@ export const getCity = async (req: Request, res: Response) => {
     const { name } = req.params;
 
     try {
-      const cities = await City.find({ name: { $regex: name }})
+      const cities = await City.find({ name: { $regex: name } });
       res.status(200).json({ success: true, data: cities });
     } catch (weatherErr) {
       res.status(400).json(errorResponse(weatherErr.message));
@@ -18,4 +18,3 @@ export const getCity = async (req: Request, res: Response) => {
     res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
   }
 };
-

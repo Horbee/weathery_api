@@ -33,11 +33,18 @@ export const getWeatherForecastByCoords = async (
   res: Response
 ) => {
   try {
-    const { city: { lat, lon } } = req.body;
+    const { city } = req.body;
+    const {
+      coord: { lat, lon }
+    } = city;
+
+    console.log(city);
     const weatherApiURL = "https://api.openweathermap.org/data/2.5/onecall";
 
     try {
-      const response = await axios.get(weatherApiURL, { params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" }});
+      const response = await axios.get(weatherApiURL, {
+        params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" }
+      });
       // await (req as AuthenticatedRequest).user.updateOne({ city: name });
       res.status(200).json({ success: true, data: response.data });
     } catch (weatherErr) {

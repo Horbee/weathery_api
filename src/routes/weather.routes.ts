@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use(authenticate);
 
-router.route("/forecast").get(getWeatherForecastByCoords);
+router.route("/forecast").post(getWeatherForecastByCoords);
 router.route("/:city").get(getWeatherInfoByCity);
 
 export const weatherRoutes = router;
