@@ -66,7 +66,7 @@ export const signForgotPasswordToken = async (user: UserModel) => {
     expiresIn: "1h"
   };
 
-  return jwt.sign({}, user.password, signOptions);
+  return jwt.sign({}, user.password!, signOptions);
 };
 
 export const verifyForgotPasswordToken = async (
@@ -80,5 +80,5 @@ export const verifyForgotPasswordToken = async (
     ignoreExpiration: false
   };
 
-  return jwt.verify(token, user.password, verifyOptions);
+  return jwt.verify(token, user.password!, verifyOptions);
 };
