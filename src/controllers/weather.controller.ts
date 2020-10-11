@@ -38,7 +38,6 @@ export const getWeatherForecastByCoords = async (
       coord: { lat, lon }
     } = city;
 
-    console.log(city);
     const weatherApiURL = "https://api.openweathermap.org/data/2.5/onecall";
 
     try {
@@ -46,7 +45,9 @@ export const getWeatherForecastByCoords = async (
         params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" }
       });
       // await (req as AuthenticatedRequest).user.updateOne({ city: name });
-      res.status(200).json({ success: true, data: response.data });
+      res
+        .status(200)
+        .json({ success: true, cityName: city.name, forecast: response.data });
     } catch (weatherErr) {
       res.status(400).json(errorResponse(weatherErr.message));
     }
