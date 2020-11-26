@@ -5,12 +5,13 @@ import mongoose, { Schema } from "mongoose";
 import { sendForgotPasswordMail } from "../mailer/mailer";
 import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
+import { CityModel } from "./City";
 
 export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
   password?: string;
-  city?: string;
+  city?: CityModel;
   loginMethod: LoginMethods;
   created_at?: Date;
   updated_at?: Date;
@@ -33,7 +34,10 @@ const UserSchema = new Schema<UserModel>({
     type: String,
     required: true
   },
-  city: String,
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "city"
+  },
   created_at: { type: Date, default: Date.now },
   updated_at: Date
 });

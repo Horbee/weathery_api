@@ -44,7 +44,7 @@ export const getWeatherForecastByCoords = async (
       const response = await axios.get(weatherApiURL, {
         params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" }
       });
-      // await (req as AuthenticatedRequest).user.updateOne({ city: name });
+      await (req as AuthenticatedRequest).user.updateOne({ city });
       res
         .status(200)
         .json({ success: true, cityName: city.name, forecast: response.data });

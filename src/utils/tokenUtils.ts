@@ -1,13 +1,14 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
 import { AppConfig } from "../config/appconfig";
+import { CityModel } from "../models/City";
 import { UserModel } from "../models/User";
 
 export interface AccessTokenPayload {
   user: {
     id: string;
     name: string;
-    city?: string;
+    city?: CityModel;
   };
 }
 
