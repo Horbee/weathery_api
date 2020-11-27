@@ -5,15 +5,16 @@ import mongoose, { Schema } from "mongoose";
 import { sendForgotPasswordMail } from "../mailer/mailer";
 import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
+import { CityModel } from "./City";
 
 export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
-  password: string;
-  city: string;
+  password?: string;
+  city?: CityModel;
   loginMethod: LoginMethods;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
   forgotPassword: () => Promise<void>;
 }
@@ -33,7 +34,10 @@ const UserSchema = new Schema<UserModel>({
     type: String,
     required: true
   },
-  city: String,
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "city"
+  },
   created_at: { type: Date, default: Date.now },
   updated_at: Date
 });
@@ -41,7 +45,7 @@ const UserSchema = new Schema<UserModel>({
 UserSchema.pre<UserModel>("save", async function () {
   if (this.loginMethod === "regular") {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password!, salt);
   }
 });
 
@@ -50,7 +54,7 @@ UserSchema.pre<UserModel>("updateOne", function () {
 });
 
 UserSchema.methods.comparePasswords = async function (plainPassword: string) {
-  return bcrypt.compare(plainPassword, this.password);
+  return bcrypt.compare(plainPassword, this.password!);
 };
 
 UserSchema.methods.forgotPassword = async function () {

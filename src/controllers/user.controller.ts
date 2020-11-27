@@ -7,10 +7,7 @@ import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
 import {
-  decode,
-  ForgotPasswordTokenPayload,
-  signAccessToken,
-  verifyForgotPasswordToken
+    decode, ForgotPasswordTokenPayload, signAccessToken, verifyForgotPasswordToken
 } from "../utils/tokenUtils";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -46,7 +43,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("city");
 
     if (user) {
       if (user.loginMethod !== "regular") {
