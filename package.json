@@ -20,7 +20,7 @@
     "@types/mongoose": "^5.7.36",
     "@types/morgan": "^1.9.1",
     "@types/swagger-ui-express": "^4.1.2",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -29,6 +29,7 @@
     "googleapis": "^61.0.0",
     "handlebars": "^4.7.6",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.10.9",
     "morgan": "^1.10.0",
     "swagger-ui-express": "^4.1.4"
