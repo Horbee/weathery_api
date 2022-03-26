@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 
+
 import { ErrorMessages } from "../constants/errorMessages";
 import { City } from "../models/City";
 import { errorResponse } from "../responses/errorResponse";
@@ -12,7 +13,7 @@ export const getCity = async (req: Request, res: Response) => {
     try {
       const cities = await City.find({ name: { $regex: nameReg } });
       res.status(200).json({ success: true, data: cities });
-    } catch (weatherErr) {
+    } catch (weatherErr: any) {
       res.status(400).json(errorResponse(weatherErr.message));
     }
   } catch (err) {

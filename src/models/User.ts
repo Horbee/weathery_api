@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
+
 import { sendForgotPasswordMail } from "../mailer/mailer";
 import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
@@ -22,24 +23,24 @@ export interface UserModel extends mongoose.Document {
 const UserSchema = new Schema<UserModel>({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: String,
   loginMethod: {
     type: String,
-    required: true
+    required: true,
   },
   city: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "city"
+    ref: "city",
   },
   created_at: { type: Date, default: Date.now },
-  updated_at: Date
+  updated_at: Date,
 });
 
 UserSchema.pre<UserModel>("save", async function () {
@@ -58,27 +59,27 @@ UserSchema.methods.comparePasswords = async function (plainPassword: string) {
 };
 
 UserSchema.methods.forgotPassword = async function () {
-  const token = await signForgotPasswordToken(this);
+  const token = await signForgotPasswordToken(this as UserModel);
   await sendForgotPasswordMail(this.email, this.name, token);
 };
 
 export const userCreateValidation = [
   check("name", "Name can't be empty").not().isEmpty().trim().escape(),
   check("email", "Email is invalid").isEmail(),
-  check("password", "Password is invalid").not().isEmpty()
+  check("password", "Password is invalid").not().isEmpty(),
 ];
 
 export const userLoginValidation = [
   check("email", "Email is invalid").isEmail(),
-  check("password", "Password is invalid").not().isEmpty()
+  check("password", "Password is invalid").not().isEmpty(),
 ];
 
 export const userForgotPasswordValidation = [
-  check("email", "Email is invalid").isEmail()
+  check("email", "Email is invalid").isEmail(),
 ];
 
 export const userResetPasswordValidation = [
-  check("password", "Password is invalid").not().isEmpty()
+  check("password", "Password is invalid").not().isEmpty(),
 ];
 
 export const User = mongoose.model<UserModel>("user", UserSchema);
