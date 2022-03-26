@@ -1,11 +1,12 @@
 import sgMail, { MailDataRequired } from "@sendgrid/mail";
 
+
 import { AppConfig } from "../config/appconfig";
 
 sgMail.setApiKey(AppConfig.mailAPIKey);
 
 const templates = {
-  forgot_password: AppConfig.forgotPasswordMailTemplate
+  forgot_password: AppConfig.forgotPasswordMailTemplate,
 };
 
 export const sendForgotPasswordMail = async (
@@ -19,13 +20,13 @@ export const sendForgotPasswordMail = async (
     templateId: templates.forgot_password,
     dynamic_template_data: {
       name: name,
-      url: `${AppConfig.clientUrl}/resetpassword?token=${token}`
-    }
+      url: `${AppConfig.clientUrl}/resetpassword?token=${token}`,
+    },
   };
 
   try {
     await sgMail.send(msg);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
 
     if (err.response) {

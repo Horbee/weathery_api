@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextFunction, Request, Response } from "express";
 
+
 import { errorResponse } from "../responses/errorResponse";
 
 interface FacebookAuthResponse {
@@ -25,7 +26,7 @@ export const facebookAuthentication = async (
       throw new Error();
     }
     next();
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     return res.status(400).json(errorResponse(err.message));
   }

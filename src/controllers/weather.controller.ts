@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { MongooseDocument } from "mongoose";
+import { Document as MongooseDocument } from "mongoose";
+
 
 import { AppConfig } from "../config/appconfig";
 import { ErrorMessages } from "../constants/errorMessages";
@@ -20,7 +21,7 @@ export const getWeatherInfoByCity = async (req: Request, res: Response) => {
       const response = await axios.get(weatherApiURL);
       await (req as AuthenticatedRequest).user.updateOne({ city });
       res.status(200).json({ success: true, data: response.data });
-    } catch (weatherErr) {
+    } catch (weatherErr: any) {
       res.status(400).json(errorResponse(weatherErr.message));
     }
   } catch (err) {
@@ -35,20 +36,20 @@ export const getWeatherForecastByCoords = async (
   try {
     const { city } = req.body;
     const {
-      coord: { lat, lon }
+      coord: { lat, lon },
     } = city;
 
     const weatherApiURL = "https://api.openweathermap.org/data/2.5/onecall";
 
     try {
       const response = await axios.get(weatherApiURL, {
-        params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" }
+        params: { lat, lon, appid: AppConfig.openweatherAPI, units: "metric" },
       });
       await (req as AuthenticatedRequest).user.updateOne({ city });
       res
         .status(200)
         .json({ success: true, cityName: city.name, forecast: response.data });
-    } catch (weatherErr) {
+    } catch (weatherErr: any) {
       res.status(400).json(errorResponse(weatherErr.message));
     }
   } catch (err) {
