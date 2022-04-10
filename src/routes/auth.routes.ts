@@ -41,7 +41,13 @@ router.get(
   async (req, res, next) => {
     const { user } = req;
     const token = await signAccessToken(user as UserModel);
-    res.status(200).json({ user, token });
+    res.status(200).json({
+      success: true,
+      data: {
+        token,
+        user,
+      },
+    });
   }
 );
 
@@ -53,7 +59,13 @@ router.get(
   async (req, res, next) => {
     const { user } = req;
     const token = await signAccessToken(user as UserModel);
-    res.status(200).json({ user: req.user, token });
+    res.status(200).json({
+      success: true,
+      data: {
+        token,
+        user,
+      },
+    });
   }
 );
 

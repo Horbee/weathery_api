@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import url from "url";
 
+
 import { AppConfig } from "../config/appconfig";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User } from "../models/User";
@@ -23,14 +24,17 @@ export const createUser = async (req: Request, res: Response) => {
       name,
       email,
       password,
-      loginMethod: "regular"
+      loginMethod: "regular",
     });
 
     const token = await signAccessToken(user);
 
     return res.status(201).json({
       success: true,
-      data: token
+      data: {
+        token,
+        user,
+      },
     });
   } catch (err) {
     console.log(err);
@@ -57,7 +61,10 @@ export const loginUser = async (req: Request, res: Response) => {
 
         return res.status(200).json({
           success: true,
-          data: token
+          data: {
+            token,
+            user,
+          },
         });
       }
     }
@@ -82,7 +89,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
   return res.status(200).json({
     success: true,
-    data: "Password reset link sent."
+    data: "Password reset link sent.",
   });
 };
 
@@ -109,7 +116,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
       return res.status(200).json({
         success: true,
-        data: "Password reset successful."
+        data: "Password reset successful.",
       });
     }
 
