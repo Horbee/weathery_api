@@ -1,34 +1,39 @@
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
+import passport from "passport";
 import swaggerUi from "swagger-ui-express";
+
 
 import { startApp } from "./cluster";
 import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
 import { swaggerDocument } from "./openAPI/swagger";
+import { authRoutes } from "./routes/auth.routes";
 import { cityRoutes } from "./routes/city.routes";
-import { oauthRoutes } from "./routes/oauth.routes";
-import { userRoutes } from "./routes/user.routes";
 import { weatherRoutes } from "./routes/weather.routes";
 
 const app = express();
 
 const corsOptions = {
-  origin: AppConfig.allowedHosts.split(";")
+  origin: AppConfig.allowedHosts.split(";"),
 };
 
 // Init middlewares
 app.use(cors(corsOptions));
-
 app.use(express.json());
+app.use(passport.initialize());
+
+require("./services/jwtStrategy");
+require("./services/googleStrategy");
+require("./services/facebookStrategy");
 
 if (AppConfig.nodeEnv === "development") {
   app.use(morgan("dev"));
 } else {
   app.use(
     morgan("combined", {
-      skip: (req, res) => res.statusCode < 400
+      skip: (req, res) => res.statusCode < 400,
     })
   );
 }
@@ -41,8 +46,7 @@ app.get("/health", (req, res) => {
 });
 
 // Controller Routes
-app.use("/api/auth", userRoutes);
-app.use("/api/oauth", oauthRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/cities", cityRoutes);
 

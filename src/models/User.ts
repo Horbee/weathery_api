@@ -12,46 +12,45 @@ export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
   password?: string;
+  googleId?: string;
+  facebookId?: string;
   city?: CityModel;
   loginMethod: LoginMethods;
-  created_at?: Date;
-  updated_at?: Date;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
   forgotPassword: () => Promise<void>;
 }
 
-const UserSchema = new Schema<UserModel>({
-  name: {
-    type: String,
-    required: true,
+const UserSchema = new Schema<UserModel>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: String,
+    googleId: String,
+    facebookId: String,
+    loginMethod: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "city",
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: String,
-  loginMethod: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "city",
-  },
-  created_at: { type: Date, default: Date.now },
-  updated_at: Date,
-});
+  { timestamps: true }
+);
 
 UserSchema.pre<UserModel>("save", async function () {
   if (this.loginMethod === "regular") {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password!, salt);
   }
-});
-
-UserSchema.pre<UserModel>("updateOne", function () {
-  this.set({ updated_at: new Date() });
 });
 
 UserSchema.methods.comparePasswords = async function (plainPassword: string) {

@@ -19,5 +19,7 @@ export const AppConfig = {
   forgotPasswordMailTemplate: process.env.FORGOT_PW_TEMPLATE || "",
   clientUrl: process.env.CLIENT_URL || "http://localhost:3000",
   googleClientID: process.env.GOOGLE_CLIENT_ID || "",
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+  facebookClientID: process.env.FACEBOOK_CLIENT_ID || "",
+  facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
 };
