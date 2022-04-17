@@ -5,10 +5,10 @@ import morgan from "morgan";
 import passport from "passport";
 import swaggerUi from "swagger-ui-express";
 
-
 import { startApp } from "./cluster";
 import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
+import { errorHandler } from "./middleware/errorhandler.middleware";
 import { swaggerDocument } from "./openAPI/swagger";
 import { authRoutes } from "./routes/auth.routes";
 import { cityRoutes } from "./routes/city.routes";
@@ -51,6 +51,9 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/cities", cityRoutes);
+
+// Use our error handler middleware
+app.use(errorHandler);
 
 startApp(AppConfig.clusterMode, () => {
   // connect Mongo DB

@@ -1,94 +1,87 @@
 import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
 import url from "url";
-
 
 import { ErrorMessages } from "../constants/errorMessages";
 import { User, UserModel } from "../models/User";
 import { apiResponse } from "../responses/apiResponse";
-import { errorResponse } from "../responses/errorResponse";
 import {
-    addUser, getUserByEmail, recoverPassword, verifyAndResetPassword
+  addUser,
+  getUserByEmail,
+  recoverPassword,
+  verifyAndResetPassword,
 } from "../services/user.service";
 import { normalizeUser } from "../utils/normalize";
-import { decode, ForgotPasswordTokenPayload, signAccessToken } from "../utils/tokenUtils";
+import {
+  decode,
+  ForgotPasswordTokenPayload,
+  signAccessToken,
+} from "../utils/tokenUtils";
 
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password } = req.body;
+export const createUser = asyncHandler(async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
 
-    // Check if user is already registered
-    if (await getUserByEmail(email)) {
-      return res
-        .status(400)
-        .json(errorResponse(ErrorMessages.USER_ALREADY_REGISTERED));
-    }
+  // Check if user is already registered
+  if (await getUserByEmail(email)) {
+    res.status(400);
+    throw new Error(ErrorMessages.USER_ALREADY_REGISTERED);
+  }
 
-    // Create user with regular login method
-    const user = await addUser(name, email, password, "regular");
+  // Create user with regular login method
+  const user = await addUser(name, email, password, "regular");
 
-    // Send access token
+  // Send access token
+  const token = await signAccessToken(user);
+  res.status(201).json(apiResponse({ token, user: normalizeUser(user) }));
+});
+
+export const loginUser = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    res.status(400);
+    throw new Error(ErrorMessages.INVALID_CREDENTIALS);
+  }
+
+  if (user.loginMethod !== "regular") {
+    res.status(400);
+    throw new Error(ErrorMessages.USER_DIFF_LOGIN);
+  }
+
+  if (await user.comparePasswords(password)) {
     const token = await signAccessToken(user);
 
-    return res
-      .status(201)
-      .json(apiResponse({ token, user: normalizeUser(user) }));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
+    res.status(200).json(apiResponse({ token, user: normalizeUser(user) }));
+  } else {
+    res.status(400);
+    throw new Error(ErrorMessages.INVALID_CREDENTIALS);
   }
-};
+});
 
-export const loginUser = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await getUserByEmail(email);
-
-    if (user) {
-      if (user.loginMethod !== "regular") {
-        // User is registered with other loginmethod
-        return res
-          .status(400)
-          .json(errorResponse(ErrorMessages.USER_DIFF_LOGIN));
-      }
-      if (await user.comparePasswords(password)) {
-        const token = await signAccessToken(user);
-
-        return res
-          .status(200)
-          .json(apiResponse({ token, user: normalizeUser(user) }));
-      }
-    }
-
-    return res
-      .status(400)
-      .json(errorResponse(ErrorMessages.INVALID_CREDENTIALS));
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
-  }
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  return res.status(200).json(
+export const getUser = asyncHandler(async (req: Request, res: Response) => {
+  res.status(200).json(
     apiResponse({
       token: req.headers.authorization?.replace("Bearer ", ""),
       user: normalizeUser(req.user as UserModel),
     })
   );
-};
+});
 
-export const forgotPassword = async (req: Request, res: Response) => {
-  const { email } = req.body;
+export const forgotPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
 
-  const user = await getUserByEmail(email);
-  if (user) await recoverPassword(user);
+    const user = await getUserByEmail(email);
+    if (user) await recoverPassword(user);
 
-  return res.status(200).json(apiResponse("Password reset link sent."));
-};
+    res.status(200).json(apiResponse("Password reset link sent."));
+  }
+);
 
-export const resetPassword = async (req: Request, res: Response) => {
-  try {
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response) => {
     const { password } = req.body;
     const token = url.parse(req.url, true).query.token as string;
 
@@ -96,16 +89,17 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const user = await User.findById(decodedToken.sub);
 
-    if (!user)
-      return res.status(400).json(errorResponse(ErrorMessages.USER_NOT_FOUND));
+    if (!user) {
+      res.status(400);
+      throw new Error(ErrorMessages.USER_NOT_FOUND);
+    }
 
     const { error } = await verifyAndResetPassword(user, token, password);
-    if (error)
-      return res.status(401).send(errorResponse(ErrorMessages.INVALID_TOKEN));
+    if (error) {
+      res.status(401);
+      throw new Error(ErrorMessages.INVALID_TOKEN);
+    }
 
-    return res.status(200).json(apiResponse("Password reset successful."));
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
+    res.status(200).json(apiResponse("Password reset successful."));
   }
-};
+);
