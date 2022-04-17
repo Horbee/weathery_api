@@ -1,13 +1,20 @@
 import express from "express";
 import passport from "passport";
 
-
 import {
-    createUser, forgotPassword, loginUser, resetPassword
+  createUser,
+  forgotPassword,
+  getUser,
+  loginUser,
+  resetPassword,
 } from "../controllers/user.controller";
+import { authenticate } from "../middleware/auth.middleware";
 import {
-    userCreateValidation, userForgotPasswordValidation, userLoginValidation, UserModel,
-    userResetPasswordValidation
+  userCreateValidation,
+  userForgotPasswordValidation,
+  userLoginValidation,
+  UserModel,
+  userResetPasswordValidation,
 } from "../models/User";
 import { validationErrors } from "../responses/validationError";
 import { signAccessToken } from "../utils/tokenUtils";
@@ -15,6 +22,7 @@ import { signAccessToken } from "../utils/tokenUtils";
 const router = express.Router();
 
 // User routes
+router.route("/me").get(authenticate, getUser);
 router
   .route("/local/create")
   .post(userCreateValidation, validationErrors, createUser);

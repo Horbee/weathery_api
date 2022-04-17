@@ -14,7 +14,7 @@ export interface UserModel extends mongoose.Document {
   password?: string;
   googleId?: string;
   facebookId?: string;
-  city?: CityModel;
+  cities: CityModel[];
   loginMethod: LoginMethods;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
   forgotPassword: () => Promise<void>;
@@ -38,10 +38,13 @@ const UserSchema = new Schema<UserModel>(
       type: String,
       required: true,
     },
-    city: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "city",
-    },
+    cities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "city",
+        default: [],
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -54,7 +57,7 @@ UserSchema.pre<UserModel>("save", async function () {
 });
 
 UserSchema.methods.comparePasswords = async function (plainPassword: string) {
-  return bcrypt.compare(plainPassword, this.password!);
+  return bcrypt.compare(plainPassword, this.password);
 };
 
 UserSchema.methods.forgotPassword = async function () {

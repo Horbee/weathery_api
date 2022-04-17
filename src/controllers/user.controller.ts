@@ -5,8 +5,9 @@ import url from "url";
 
 import { AppConfig } from "../config/appconfig";
 import { ErrorMessages } from "../constants/errorMessages";
-import { User } from "../models/User";
+import { User, UserModel } from "../models/User";
 import { errorResponse } from "../responses/errorResponse";
+import { normalizeUser } from "../utils/normalize";
 import {
     decode, ForgotPasswordTokenPayload, signAccessToken, verifyForgotPasswordToken
 } from "../utils/tokenUtils";
@@ -15,11 +16,14 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
+    // Check if user is already registered
     if (await User.findOne({ email })) {
       return res
         .status(400)
         .json(errorResponse(ErrorMessages.USER_ALREADY_REGISTERED));
     }
+
+    // Create user with regular login method
     const user = await User.create({
       name,
       email,
@@ -27,13 +31,15 @@ export const createUser = async (req: Request, res: Response) => {
       loginMethod: "regular",
     });
 
+    // Send access token
     const token = await signAccessToken(user);
 
+    // Return user withouth password
     return res.status(201).json({
       success: true,
       data: {
         token,
-        user,
+        user: normalizeUser(user),
       },
     });
   } catch (err) {
@@ -47,7 +53,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).populate("city");
+    const user = await User.findOne({ email });
 
     if (user) {
       if (user.loginMethod !== "regular") {
@@ -63,7 +69,7 @@ export const loginUser = async (req: Request, res: Response) => {
           success: true,
           data: {
             token,
-            user,
+            user: normalizeUser(user),
           },
         });
       }
@@ -76,6 +82,16 @@ export const loginUser = async (req: Request, res: Response) => {
     console.error(err);
     return res.status(500).json(errorResponse(ErrorMessages.SERVER_ERROR));
   }
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  return res.status(200).json({
+    success: true,
+    data: {
+      token: req.headers.authorization?.replace("Bearer ", ""),
+      user: normalizeUser(req.user as UserModel),
+    },
+  });
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {

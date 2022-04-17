@@ -1,6 +1,5 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
-
 import { AppConfig } from "../config/appconfig";
 import { CityModel } from "../models/City";
 import { UserModel } from "../models/User";
@@ -10,7 +9,6 @@ export interface AccessTokenPayload {
   user: {
     id: string;
     name: string;
-    city?: CityModel;
   };
 }
 
@@ -29,10 +27,6 @@ export const signAccessToken = async (user: UserModel) => {
       name: user.name,
     },
   };
-
-  if (user.city) {
-    payload.user.city = user.city;
-  }
 
   const signOptions: SignOptions = {
     issuer: AppConfig.appName,
