@@ -11,13 +11,6 @@ import {
 export const getWeatherInfoByCity = asyncHandler(
   async (req: Request, res: Response) => {
     const name = req.query.name as string;
-
-    // check if name is provided
-    if (!name) {
-      res.status(400);
-      throw new Error(ErrorMessages.INVALID_CITY);
-    }
-
     const weather = await getWeatherInfo(name);
     res.status(200).json(apiResponse(weather));
   }

@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
-
 import { sendForgotPasswordMail } from "../mailer/mailer";
 import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
@@ -66,7 +65,7 @@ UserSchema.methods.forgotPassword = async function () {
 };
 
 export const userCreateValidation = [
-  check("name", "Name can't be empty").not().isEmpty().trim().escape(),
+  check("name", "Name is invalid").not().isEmpty().trim().escape(),
   check("email", "Email is invalid").isEmail(),
   check("password", "Password is invalid").not().isEmpty(),
 ];

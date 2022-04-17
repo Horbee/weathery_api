@@ -1,4 +1,6 @@
 export const ErrorMessages = {
+  LAT_MISSING: "Lat is required.",
+  LON_MISSING: "Lon is required.",
   INVALID_CITY: "Invalid city name.",
   INVALID_CITY_ID: "Invalid city id.",
   SERVER_ERROR: "Server error.",

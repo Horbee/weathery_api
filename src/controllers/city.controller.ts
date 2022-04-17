@@ -16,11 +16,6 @@ import { normalizeCity } from "../utils/normalize";
 export const getCityByName = asyncHandler(
   async (req: Request, res: Response) => {
     const name = req.query.name as string;
-    if (!name) {
-      res.status(400);
-      throw new Error(ErrorMessages.INVALID_CITY);
-    }
-
     const cities = await findAllCitiesByName(name);
     res.status(200).json(apiResponse(cities.map(normalizeCity)));
   }
@@ -38,11 +33,6 @@ export const addCityToUser = asyncHandler(
   async (req: Request, res: Response) => {
     const user = req.user as UserModel;
     const { city } = req.body;
-
-    if (!city) {
-      res.status(400);
-      throw new Error(ErrorMessages.INVALID_CITY_ID);
-    }
 
     const cityExists = await findCityById(city.id);
     if (!cityExists) {
