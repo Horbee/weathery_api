@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 
 import { ErrorMessages } from "../constants/errorMessages";
-import { City } from "../models/City";
 import { UserModel } from "../models/User";
 import { apiResponse } from "../responses/apiResponse";
 import { errorResponse } from "../responses/errorResponse";
