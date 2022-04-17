@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import helmet from "helmet";
 import morgan from "morgan";
 import passport from "passport";
 import swaggerUi from "swagger-ui-express";
@@ -20,6 +21,7 @@ const corsOptions = {
 };
 
 // Init middlewares
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(passport.initialize());
