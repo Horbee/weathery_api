@@ -1,8 +1,10 @@
 import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 
+
 import { AppConfig } from "../config/appconfig";
 import { User } from "../models/User";
+import { AccessTokenPayload } from "../utils/tokenUtils";
 
 const jwtLogin = new JwtStrategy(
   {
@@ -14,8 +16,12 @@ const jwtLogin = new JwtStrategy(
     algorithms: ["RS256"],
   },
   async (jwt_payload, done) => {
+    const {
+      user: { id },
+    } = jwt_payload as AccessTokenPayload;
+
     try {
-      const user = await User.findOne({ id: jwt_payload });
+      const user = await User.findById(id);
       if (user) return done(null, user);
 
       return done(null, false);

@@ -1,7 +1,7 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
+
 import { AppConfig } from "../config/appconfig";
-import { CityModel } from "../models/City";
 import { UserModel } from "../models/User";
 
 //TODO: put only the userid in the token and create /me endpoint
@@ -10,6 +10,11 @@ export interface AccessTokenPayload {
     id: string;
     name: string;
   };
+  iat: number;
+  exp: number;
+  aud: string;
+  iss: string;
+  sub: string;
 }
 
 export interface ForgotPasswordTokenPayload {
@@ -21,7 +26,7 @@ export interface ForgotPasswordTokenPayload {
 }
 
 export const signAccessToken = async (user: UserModel) => {
-  const payload: AccessTokenPayload = {
+  const payload: Partial<AccessTokenPayload> = {
     user: {
       id: user.id,
       name: user.name,
