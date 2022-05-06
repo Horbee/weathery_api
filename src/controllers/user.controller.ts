@@ -6,9 +6,7 @@ import url from "url";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User, UserModel } from "../models/User";
 import { apiResponse } from "../responses/apiResponse";
-import {
-    addUser, getUserByEmail, recoverPassword, verifyAndResetPassword
-} from "../services/user.service";
+import userService from "../services/user.service";
 import { normalizeUser } from "../utils/normalize";
 import { decode, ForgotPasswordTokenPayload, signAccessToken } from "../utils/tokenUtils";
 
@@ -16,13 +14,13 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   // Check if user is already registered
-  if (await getUserByEmail(email)) {
+  if (await userService.getUserByEmail(email)) {
     res.status(400);
     throw new Error(ErrorMessages.USER_ALREADY_REGISTERED);
   }
 
   // Create user with regular login method
-  const user = await addUser(name, email, password, "regular");
+  const user = await userService.addUser(name, email, password, "regular");
 
   // Send access token
   const token = await signAccessToken(user);
@@ -32,7 +30,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await getUserByEmail(email);
+  const user = await userService.getUserByEmail(email);
 
   if (!user) {
     res.status(400);
@@ -67,8 +65,8 @@ export const forgotPassword = asyncHandler(
   async (req: Request, res: Response) => {
     const { email } = req.body;
 
-    const user = await getUserByEmail(email);
-    if (user) await recoverPassword(user);
+    const user = await userService.getUserByEmail(email);
+    if (user) await userService.recoverPassword(user);
 
     res.status(200).json(apiResponse("Password reset link sent."));
   }
@@ -88,7 +86,11 @@ export const resetPassword = asyncHandler(
       throw new Error(ErrorMessages.USER_NOT_FOUND);
     }
 
-    const { error } = await verifyAndResetPassword(user, token, password);
+    const { error } = await userService.verifyAndResetPassword(
+      user,
+      token,
+      password
+    );
     if (error) {
       res.status(401);
       throw new Error(ErrorMessages.INVALID_TOKEN);

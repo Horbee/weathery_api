@@ -1,15 +1,13 @@
 import express from "express";
 import { check } from "express-validator";
 
-import { ErrorMessages } from "../constants/errorMessages";
+
+import { ErrorMessages } from "../../constants/errorMessages";
 import {
-  addCityToUser,
-  deleteCityFromUser,
-  getCityByName,
-  getCityByUser,
-} from "../controllers/city.controller";
-import { authenticate } from "../middleware/auth.middleware";
-import { validationErrors } from "../responses/validationError";
+    addCityToUser, deleteCityFromUser, getCityByName, getCityByUser
+} from "../../controllers/city.controller";
+import { authenticate } from "../../middleware/auth.middleware";
+import { validationErrors } from "../../responses/validationError";
 
 const router = express.Router();
 
@@ -40,4 +38,4 @@ router
     getCityByName
   );
 
-export const cityRoutes = router;
+export const v1CityRoutes = router;

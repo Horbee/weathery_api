@@ -1,13 +1,13 @@
 import express from "express";
 import { check } from "express-validator";
 
-import { ErrorMessages } from "../constants/errorMessages";
+
+import { ErrorMessages } from "../../constants/errorMessages";
 import {
-  getWeatherForecastByCoords,
-  getWeatherInfoByCity,
-} from "../controllers/weather.controller";
-import { authenticate } from "../middleware/auth.middleware";
-import { validationErrors } from "../responses/validationError";
+    getWeatherForecastByCoords, getWeatherInfoByCity
+} from "../../controllers/weather.controller";
+import { authenticate } from "../../middleware/auth.middleware";
+import { validationErrors } from "../../responses/validationError";
 
 const router = express.Router();
 
@@ -32,4 +32,4 @@ router
     getWeatherInfoByCity
   );
 
-export const weatherRoutes = router;
+export const v1WeatherRoutes = router;

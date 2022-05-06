@@ -7,7 +7,7 @@ import { User, UserModel } from "../models/User";
 import { Nullable } from "../utils/nullable";
 import { verifyForgotPasswordToken } from "../utils/tokenUtils";
 
-export const addUser = async (
+const addUser = async (
   name: string,
   email: string,
   password: string,
@@ -23,19 +23,17 @@ export const addUser = async (
   return user;
 };
 
-export const getUserByEmail = async (
-  email: string
-): Promise<Nullable<UserModel>> => {
+const getUserByEmail = async (email: string): Promise<Nullable<UserModel>> => {
   return await User.findOne({ email });
 };
 
-export const recoverPassword = async (user: UserModel): Promise<void> => {
+const recoverPassword = async (user: UserModel): Promise<void> => {
   if (user.loginMethod === "regular" && AppConfig.mailSystem) {
     await user.forgotPassword();
   }
 };
 
-export const verifyAndResetPassword = async (
+const verifyAndResetPassword = async (
   user: UserModel,
   token: string,
   newPassword: string
@@ -51,4 +49,11 @@ export const verifyAndResetPassword = async (
   const hashedPassword = await bcrypt.hash(newPassword, salt);
   await user.updateOne({ password: hashedPassword });
   return { error: null };
+};
+
+export default {
+  addUser,
+  getUserByEmail,
+  recoverPassword,
+  verifyAndResetPassword,
 };

@@ -5,14 +5,15 @@ import morgan from "morgan";
 import passport from "passport";
 import swaggerUi from "swagger-ui-express";
 
+
 import { startApp } from "./cluster";
 import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
 import { errorHandler } from "./middleware/errorhandler.middleware";
 import { swaggerDocument } from "./openAPI/swagger";
-import { authRoutes } from "./routes/auth.routes";
-import { cityRoutes } from "./routes/city.routes";
-import { weatherRoutes } from "./routes/weather.routes";
+import { v1AuthRoutes } from "./routes/v1/auth.routes";
+import { v1CityRoutes } from "./routes/v1/city.routes";
+import { v1WeatherRoutes } from "./routes/v1/weather.routes";
 
 const app = express();
 
@@ -48,9 +49,9 @@ app.get("/health", (req, res) => {
 });
 
 // Controller Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/weather", weatherRoutes);
-app.use("/api/cities", cityRoutes);
+app.use("/api/v1/auth", v1AuthRoutes);
+app.use("/api/v1/weather", v1WeatherRoutes);
+app.use("/api/v1/cities", v1CityRoutes);
 
 // Use our error handler middleware
 app.use(errorHandler);
