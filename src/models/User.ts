@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
-
 import { sendForgotPasswordMail } from "../mailer/mailer";
 import { LoginMethods } from "../types/loginMethods";
 import { signForgotPasswordToken } from "../utils/tokenUtils";
@@ -12,36 +11,42 @@ export interface UserModel extends mongoose.Document {
   name: string;
   email: string;
   password?: string;
-  city?: CityModel;
+  googleId?: string;
+  facebookId?: string;
+  cities: CityModel[];
   loginMethod: LoginMethods;
-  created_at?: Date;
-  updated_at?: Date;
   comparePasswords: (plainPassword: string) => Promise<boolean>;
   forgotPassword: () => Promise<void>;
 }
 
-const UserSchema = new Schema<UserModel>({
-  name: {
-    type: String,
-    required: true,
+const UserSchema = new Schema<UserModel>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: String,
+    googleId: String,
+    facebookId: String,
+    loginMethod: {
+      type: String,
+      required: true,
+    },
+    cities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "city",
+        default: [],
+      },
+    ],
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: String,
-  loginMethod: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "city",
-  },
-  created_at: { type: Date, default: Date.now },
-  updated_at: Date,
-});
+  { timestamps: true }
+);
 
 UserSchema.pre<UserModel>("save", async function () {
   if (this.loginMethod === "regular") {
@@ -50,12 +55,8 @@ UserSchema.pre<UserModel>("save", async function () {
   }
 });
 
-UserSchema.pre<UserModel>("updateOne", function () {
-  this.set({ updated_at: new Date() });
-});
-
 UserSchema.methods.comparePasswords = async function (plainPassword: string) {
-  return bcrypt.compare(plainPassword, this.password!);
+  return bcrypt.compare(plainPassword, this.password);
 };
 
 UserSchema.methods.forgotPassword = async function () {
@@ -64,7 +65,7 @@ UserSchema.methods.forgotPassword = async function () {
 };
 
 export const userCreateValidation = [
-  check("name", "Name can't be empty").not().isEmpty().trim().escape(),
+  check("name", "Name is invalid").not().isEmpty().trim().escape(),
   check("email", "Email is invalid").isEmail(),
   check("password", "Password is invalid").not().isEmpty(),
 ];

@@ -11,18 +11,18 @@ export const swaggerDocument = {
     description: "a weather application using node and react",
     termsOfService: "",
     contact: {
-      name: "Horbee"
+      name: "Horbee",
     },
     license: {
       name: "Apache 2.0",
-      url: "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+      url: "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
   },
   servers: [
     {
       url: process.env.API_URL || "http://localhost:5000",
-      description: "Current Environment"
-    }
+      description: "Current Environment",
+    },
   ],
   components: {
     schemas: {},
@@ -30,30 +30,30 @@ export const swaggerDocument = {
       bearerAuth: {
         type: "http",
         scheme: "bearer",
-        bearerFormat: "JWT"
-      }
-    }
+        bearerFormat: "JWT",
+      },
+    },
   },
   tags: [{ name: "Weather" }, { name: "User" }, { name: "Health" }],
   paths: {
     "/api/weather/{city}": {
-      get: getWeather
+      get: getWeather,
     },
-    "/api/auth": {
-      post: createUser
+    "/api/auth/local/create": {
+      post: createUser,
     },
-    "/api/auth/login": {
-      post: loginUser
+    "/api/auth/local": {
+      post: loginUser,
     },
     "/api/auth/forgotpassword": {
-      post: forgotPassword
+      post: forgotPassword,
     },
     "/api/auth/resetpassword": {
-      post: resetPassword
+      post: resetPassword,
     },
     "/health": {
-      get: getHealth
-    }
+      get: getHealth,
+    },
   },
-  definitions: modelDefinitions
+  definitions: modelDefinitions,
 };

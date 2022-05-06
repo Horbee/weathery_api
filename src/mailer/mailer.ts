@@ -1,4 +1,4 @@
-import sgMail, { MailDataRequired } from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 
 
 import { AppConfig } from "../config/appconfig";
