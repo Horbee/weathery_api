@@ -1,5 +1,4 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
 import passport from "passport";
 
 
@@ -13,7 +12,6 @@ import {
     userResetPasswordValidation
 } from "../../models/User";
 import { validationErrors } from "../../responses/validationError";
-import { signAccessToken } from "../../utils/tokenUtils";
 
 const router = express.Router();
 

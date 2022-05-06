@@ -74,8 +74,7 @@ export const forgotPassword = asyncHandler(
 
 export const resetPassword = asyncHandler(
   async (req: Request, res: Response) => {
-    const { password } = req.body;
-    const token = url.parse(req.url, true).query.token as string;
+    const { password, token } = req.body;
 
     const decodedToken = decode(token) as ForgotPasswordTokenPayload;
 

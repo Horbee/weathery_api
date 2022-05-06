@@ -26,6 +26,7 @@ export const sendForgotPasswordMail = async (
 
   try {
     await sgMail.send(msg);
+    console.log("Forgot Password Mail sent");
   } catch (err: any) {
     console.error(err);
 
