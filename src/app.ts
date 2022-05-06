@@ -44,7 +44,7 @@ if (AppConfig.nodeEnv === "development") {
 app.use("/swagger-ui", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health Check
-app.get("/health", (req, res) => {
+app.get("/api/v1/health", (req, res) => {
   res.status(200).json({ status: "UP" });
 });
 
