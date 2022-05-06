@@ -13,7 +13,6 @@ const facebookLogin = new FacebookStrategy(
     profileFields: ["id", "displayName", "photos", "email"],
   },
   async (accessToken, refreshToken, profile, cb) => {
-    console.log("facebook profile:", profile);
     try {
       const user = await User.findOne({ facebookId: profile.id });
       if (user) return cb(null, user);

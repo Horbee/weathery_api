@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+
 import { errorResponse } from "../responses/errorResponse";
 
 export const errorHandler = (
@@ -8,6 +9,9 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  const status =
+    res.statusCode < 400 ? 400 : !res.statusCode ? 500 : res.statusCode;
+
   console.error(err.stack);
-  res.status(res.statusCode ?? 500).json(errorResponse(err.message));
+  res.status(status).json(errorResponse(err.message));
 };

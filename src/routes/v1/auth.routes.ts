@@ -1,7 +1,9 @@
 import express from "express";
+import asyncHandler from "express-async-handler";
 import passport from "passport";
 
 
+import { loginUserOAuth } from "../../controllers/oauth.controller";
 import {
     createUser, forgotPassword, getUser, loginUser, resetPassword
 } from "../../controllers/user.controller";
@@ -39,36 +41,24 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/", session: false }),
-  async (req, res, next) => {
-    const { user } = req;
-    const token = await signAccessToken(user as UserModel);
-    res.status(200).json({
-      success: true,
-      data: {
-        token,
-        user,
-      },
-    });
-  }
+  passport.authenticate("google", {
+    failureMessage: true,
+    failWithError: true,
+    session: false,
+  }),
+  loginUserOAuth
 );
 
 router.get("/facebook", passport.authenticate("facebook", { session: false }));
 
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { failureRedirect: "/", session: false }),
-  async (req, res, next) => {
-    const { user } = req;
-    const token = await signAccessToken(user as UserModel);
-    res.status(200).json({
-      success: true,
-      data: {
-        token,
-        user,
-      },
-    });
-  }
+  passport.authenticate("facebook", {
+    failureMessage: true,
+    failWithError: true,
+    session: false,
+  }),
+  loginUserOAuth
 );
 
 export const v1AuthRoutes = router;
