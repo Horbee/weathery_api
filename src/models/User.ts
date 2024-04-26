@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { check } from "express-validator";
 import mongoose, { Schema } from "mongoose";
 
 import { sendForgotPasswordMail } from "../mailer/mailer";
@@ -63,24 +62,5 @@ UserSchema.methods.forgotPassword = async function () {
   const token = await signForgotPasswordToken(this as UserModel);
   await sendForgotPasswordMail(this.email, this.name, token);
 };
-
-export const userCreateValidation = [
-  check("name", "Name is invalid").not().isEmpty().trim().escape(),
-  check("email", "Email is invalid").isEmail(),
-  check("password", "Password is invalid").not().isEmpty(),
-];
-
-export const userLoginValidation = [
-  check("email", "Email is invalid").isEmail(),
-  check("password", "Password is invalid").not().isEmpty(),
-];
-
-export const userForgotPasswordValidation = [
-  check("email", "Email is invalid").isEmail(),
-];
-
-export const userResetPasswordValidation = [
-  check("password", "Password is invalid").not().isEmpty(),
-];
 
 export const User = mongoose.model<UserModel>("user", UserSchema);

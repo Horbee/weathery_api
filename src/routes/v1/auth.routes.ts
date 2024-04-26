@@ -1,32 +1,35 @@
 import express from "express";
 import passport from "passport";
 
-
 import { loginUserOAuth } from "../../controllers/oauth.controller";
 import {
-    createUser, forgotPassword, getUser, loginUser, resetPassword
+  createUser,
+  forgotPassword,
+  getUser,
+  loginUser,
+  resetPassword,
 } from "../../controllers/user.controller";
 import { authenticate } from "../../middleware/auth.middleware";
+import { validateData } from "../../middleware/validation.middleware";
 import {
-    userCreateValidation, userForgotPasswordValidation, userLoginValidation, UserModel,
-    userResetPasswordValidation
-} from "../../models/User";
-import { validationErrors } from "../../responses/validationError";
+  userCreateSchema,
+  userForgotPasswordSchema,
+  userLoginSchema,
+  userResetPasswordSchema,
+} from "../../schemas/userSchemas";
 
 const router = express.Router();
 
 // User routes
 router.route("/me").get(authenticate, getUser);
-router
-  .route("/local/create")
-  .post(userCreateValidation, validationErrors, createUser);
-router.route("/local").post(userLoginValidation, validationErrors, loginUser);
+router.route("/local/create").post(validateData(userCreateSchema), createUser);
+router.route("/local").post(validateData(userLoginSchema), loginUser);
 router
   .route("/forgotpassword")
-  .post(userForgotPasswordValidation, validationErrors, forgotPassword);
+  .post(validateData(userForgotPasswordSchema), forgotPassword);
 router
   .route("/resetpassword")
-  .post(userResetPasswordValidation, validationErrors, resetPassword);
+  .post(validateData(userResetPasswordSchema), resetPassword);
 
 // Social Authentication routes
 router.get(
