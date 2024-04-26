@@ -1,0 +1,33 @@
+services:
+  mongo:
+    image: "bitnami/mongodb:latest"
+    # image: "zcube/bitnami-compat-mongodb:latest" # use this image on Apple Silicon instead
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: 127.0.0.1
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_ROOT_USER: root
+      MONGODB_ROOT_PASSWORD: example
+      MONGODB_REPLICA_SET_KEY: replicasetkey123
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-db:/bitnami/mongodb
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/?directConnection=true&serverSelectionTimeoutMS=2000&authSource=admin
+    depends_on:
+      - mongo
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025" # Web UI
+      - "1025:1025" # SMTP
+
+volumes:
+  mongo-db:
