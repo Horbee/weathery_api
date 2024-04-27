@@ -9,10 +9,10 @@ export const createUser = {
     content: {
       "application/json": {
         schema: {
-          $ref: "#/definitions/UserCreate"
-        }
-      }
-    }
+          $ref: "#/definitions/UserCreate",
+        },
+      },
+    },
   },
   responses: {
     "200": {
@@ -20,15 +20,15 @@ export const createUser = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/definitions/UserResponse"
-          }
-        }
-      }
+            $ref: "#/definitions/UserResponse",
+          },
+        },
+      },
     },
     "400": {
-      description: "Validation Error"
-    }
-  }
+      description: "Validation Error",
+    },
+  },
 };
 
 export const loginUser = {
@@ -42,10 +42,10 @@ export const loginUser = {
     content: {
       "application/json": {
         schema: {
-          $ref: "#/definitions/UserLogin"
-        }
-      }
-    }
+          $ref: "#/definitions/UserLogin",
+        },
+      },
+    },
   },
   responses: {
     "200": {
@@ -53,15 +53,42 @@ export const loginUser = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/definitions/UserResponse"
-          }
-        }
-      }
+            $ref: "#/definitions/UserResponse",
+          },
+        },
+      },
     },
     "400": {
-      description: "Validation Error"
-    }
-  }
+      description: "Validation Error",
+    },
+  },
+};
+
+export const me = {
+  tags: ["User"],
+  summary: "Current User",
+  produces: "application/json",
+  operationId: "me",
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  responses: {
+    "200": {
+      description: "Successful authentication.",
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/definitions/UserResponse",
+          },
+        },
+      },
+    },
+    "400": {
+      description: "Invalid jwtToken supplied",
+    },
+  },
 };
 
 export const forgotPassword = {
@@ -75,10 +102,10 @@ export const forgotPassword = {
     content: {
       "application/json": {
         schema: {
-          $ref: "#/definitions/ForgotPassword"
-        }
-      }
-    }
+          $ref: "#/definitions/ForgotPassword",
+        },
+      },
+    },
   },
   responses: {
     "200": {
@@ -86,15 +113,15 @@ export const forgotPassword = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/definitions/ForgotPasswordResponse"
-          }
-        }
-      }
+            $ref: "#/definitions/ForgotPasswordResponse",
+          },
+        },
+      },
     },
     "400": {
-      description: "Validation Error"
-    }
-  }
+      description: "Validation Error",
+    },
+  },
 };
 
 export const resetPassword = {
@@ -108,8 +135,8 @@ export const resetPassword = {
       in: "query",
       description: "The generated password reset token",
       required: true,
-      type: "string"
-    }
+      type: "string",
+    },
   ],
   requestBody: {
     description: "The required new password",
@@ -117,10 +144,10 @@ export const resetPassword = {
     content: {
       "application/json": {
         schema: {
-          $ref: "#/definitions/ResetPassword"
-        }
-      }
-    }
+          $ref: "#/definitions/ResetPassword",
+        },
+      },
+    },
   },
   responses: {
     "200": {
@@ -128,13 +155,13 @@ export const resetPassword = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/definitions/GenericSuccessResponse"
-          }
-        }
-      }
+            $ref: "#/definitions/GenericSuccessResponse",
+          },
+        },
+      },
     },
     "400": {
-      description: "Validation Error"
-    }
-  }
+      description: "Validation Error",
+    },
+  },
 };

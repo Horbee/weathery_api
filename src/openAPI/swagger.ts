@@ -1,6 +1,12 @@
 import { modelDefinitions } from "./definitions.swagger";
 import { getHealth } from "./health.swagger";
-import { createUser, forgotPassword, loginUser, resetPassword } from "./user.swagger";
+import {
+  createUser,
+  forgotPassword,
+  loginUser,
+  me,
+  resetPassword,
+} from "./user.swagger";
 import { getWeather } from "./weather.swagger";
 
 export const swaggerDocument = {
@@ -36,22 +42,25 @@ export const swaggerDocument = {
   },
   tags: [{ name: "Weather" }, { name: "User" }, { name: "Health" }],
   paths: {
-    "/api/weather/{city}": {
+    "/api/v1/weather/{city}": {
       get: getWeather,
     },
-    "/api/auth/local/create": {
+    "/api/v1/auth/me": {
+      get: me,
+    },
+    "/api/v1/auth/local/create": {
       post: createUser,
     },
-    "/api/auth/local": {
+    "/api/v1/auth/local": {
       post: loginUser,
     },
-    "/api/auth/forgotpassword": {
+    "/api/v1/auth/forgotpassword": {
       post: forgotPassword,
     },
-    "/api/auth/resetpassword": {
+    "/api/v1/auth/resetpassword": {
       post: resetPassword,
     },
-    "/health": {
+    "/api/v1/health": {
       get: getHealth,
     },
   },

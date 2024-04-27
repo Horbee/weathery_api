@@ -5,8 +5,6 @@ import morgan from "morgan";
 import passport from "passport";
 import swaggerUi from "swagger-ui-express";
 
-
-import { startApp } from "./cluster";
 import { AppConfig } from "./config/appconfig";
 import { connectDB } from "./db";
 import { errorHandler } from "./middleware/errorhandler.middleware";
@@ -56,13 +54,11 @@ app.use("/api/v1/cities", v1CityRoutes);
 // Use our error handler middleware
 app.use(errorHandler);
 
-startApp(AppConfig.clusterMode, () => {
-  // connect Mongo DB
-  connectDB();
-  // start app
-  app.listen(AppConfig.port, () =>
-    console.log(
-      `Server started in ${AppConfig.nodeEnv} mode, on port ${AppConfig.port}, Worker PID: ${process.pid}`
-    )
-  );
-});
+// connect Mongo DB
+connectDB();
+// start app
+app.listen(AppConfig.port, () =>
+  console.log(
+    `Server started in ${AppConfig.nodeEnv} mode, on port ${AppConfig.port}, Worker PID: ${process.pid}`
+  )
+);
