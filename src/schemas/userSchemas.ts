@@ -23,6 +23,9 @@ export const userForgotPasswordSchema = z.object({
 });
 
 export const userResetPasswordSchema = z.object({
+  token: z
+    .string({ message: "Invalid password reset token" })
+    .min(1, "Invalid password reset token"),
   password: z
     .string({ message: "Password is invalid" })
     .min(1, "Password is invalid"),

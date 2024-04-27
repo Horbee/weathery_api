@@ -2,13 +2,16 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import url from "url";
 
-
 import { ErrorMessages } from "../constants/errorMessages";
 import { User, UserModel } from "../models/User";
 import { apiResponse } from "../responses/apiResponse";
 import userService from "../services/user.service";
 import { normalizeUser } from "../utils/normalize";
-import { decode, ForgotPasswordTokenPayload, signAccessToken } from "../utils/tokenUtils";
+import {
+  decode,
+  ForgotPasswordTokenPayload,
+  signAccessToken,
+} from "../utils/tokenUtils";
 
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;

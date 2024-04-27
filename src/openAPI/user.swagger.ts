@@ -129,15 +129,6 @@ export const resetPassword = {
   summary: "Resets the password for a user.",
   produces: "application/json",
   operationId: "resetPassword",
-  parameters: [
-    {
-      name: "token",
-      in: "query",
-      description: "The generated password reset token",
-      required: true,
-      type: "string",
-    },
-  ],
   requestBody: {
     description: "The required new password",
     required: true,

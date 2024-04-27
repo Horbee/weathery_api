@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 
-
 import { AppConfig } from "../config/appconfig";
 import { ErrorMessages } from "../constants/errorMessages";
 import { User, UserModel } from "../models/User";
@@ -28,7 +27,7 @@ const getUserByEmail = async (email: string): Promise<Nullable<UserModel>> => {
 };
 
 const recoverPassword = async (user: UserModel): Promise<void> => {
-  if (user.loginMethod === "regular" && AppConfig.mailSystem) {
+  if (user.loginMethod === "regular") {
     await user.forgotPassword();
   }
 };
