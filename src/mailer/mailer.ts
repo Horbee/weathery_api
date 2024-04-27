@@ -1,37 +1,85 @@
-import sgMail from "@sendgrid/mail";
-
-
 import { AppConfig } from "../config/appconfig";
 
-sgMail.setApiKey(AppConfig.mailAPIKey);
-
-const templates = {
-  forgot_password: AppConfig.forgotPasswordMailTemplate,
-};
+import nodemailer from "nodemailer";
 
 export const sendForgotPasswordMail = async (
   email: string,
   name: string,
   token: string
 ) => {
-  const msg = {
+  const transport = nodemailer.createTransport(AppConfig.emailServer);
+
+  const url = `${AppConfig.clientUrl}/resetpassword?token=${token}`;
+
+  const result = await transport.sendMail({
     to: email,
-    from: AppConfig.mailFrom,
-    templateId: templates.forgot_password,
-    dynamic_template_data: {
-      name: name,
-      url: `${AppConfig.clientUrl}/resetpassword?token=${token}`,
-    },
-  };
+    from: AppConfig.emailFrom,
+    subject: "Weathery: Forgot Password",
+    text: text({ name, url }),
+    html: html({ name, url }),
+  });
 
-  try {
-    await sgMail.send(msg);
-    console.log("Forgot Password Mail sent");
-  } catch (err: any) {
-    console.error(err);
-
-    if (err.response) {
-      console.error(err.response.body);
-    }
+  const failed = result.rejected.concat(result.pending).filter(Boolean);
+  if (failed.length) {
+    console.error(`Email(s) (${failed.join(", ")}) could not be sent`);
   }
 };
+
+/**
+ * Email HTML body
+ * Insert invisible space into domains from being turned into a hyperlink by email
+ * clients like Outlook and Apple mail, as this is confusing because it seems
+ * like they are supposed to click on it to sign in.
+ *
+ * @note We don't add the email address to avoid needing to escape it, if you do, remember to sanitize it!
+ */
+function html(params: { name: string; url: string }) {
+  const { name, url } = params;
+
+  const brandColor = "#346df1";
+  const color = {
+    background: "#f9f9f9",
+    text: "#444",
+    mainBackground: "#fff",
+    buttonBackground: brandColor,
+    buttonBorder: brandColor,
+    buttonText: "#fff",
+  };
+
+  return `
+<body style="background: ${color.background};">
+  <table width="100%" border="0" cellspacing="20" cellpadding="0"
+    style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
+    <tr>
+      <td align="center"
+        style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+        Hey ${name}, click here to reset your password: 
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}"
+                target="_blank"
+                style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Reset Password
+                </a></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"
+        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+        If you did not request this email you can safely ignore it.
+      </td>
+    </tr>
+  </table>
+</body>
+`;
+}
+
+/** Email Text body (fallback for email clients that don't render HTML, e.g. feature phones) */
+function text({ name, url }: { name: string; url: string }) {
+  return `Hey ${name}, click here to reset your password: \n${url}\n\n`;
+}
