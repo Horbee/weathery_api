@@ -1,12 +1,11 @@
 import express from "express";
 
 import {
-  getWeatherForecastByCoords,
+  getWeatherForecastByCity,
   getWeatherInfoByCity,
 } from "../../controllers/weather.controller";
 import { authenticate } from "../../middleware/auth.middleware";
 import { validateData } from "../../middleware/validation.middleware";
-import { weatherForecastSchema } from "../../schemas/weatherSchemas";
 import { citySearchSchema } from "../../schemas/citySchemas";
 
 const router = express.Router();
@@ -15,10 +14,10 @@ router.use(authenticate);
 
 router
   .route("/forecast")
-  .post(validateData(weatherForecastSchema), getWeatherForecastByCoords);
+  .get(validateData(citySearchSchema, "query"), getWeatherForecastByCity);
 
 router
   .route("/city")
-  .get(validateData(citySearchSchema, "params"), getWeatherInfoByCity);
+  .get(validateData(citySearchSchema, "query"), getWeatherInfoByCity);
 
 export const v1WeatherRoutes = router;

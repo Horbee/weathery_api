@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-
 import { apiResponse } from "../responses/apiResponse";
 import weatherService from "../services/weather.service";
 
@@ -13,11 +12,11 @@ export const getWeatherInfoByCity = asyncHandler(
   }
 );
 
-export const getWeatherForecastByCoords = asyncHandler(
+export const getWeatherForecastByCity = asyncHandler(
   async (req: Request, res: Response) => {
-    const { city } = req.body;
+    const cityName = req.query.name as string;
 
-    const forecast = await weatherService.getWeatherForecast(city);
-    res.status(200).json(apiResponse({ cityName: city.name, forecast }));
+    const forecast = await weatherService.getWeatherForecast(cityName);
+    res.status(200).json(apiResponse({ cityName, forecast }));
   }
 );

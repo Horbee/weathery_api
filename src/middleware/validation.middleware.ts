@@ -7,7 +7,7 @@ export type Errors = { [key: string]: string };
 
 export function validateData(
   schema: z.ZodObject<any, any>,
-  location: "body" | "params" = "body"
+  location: "body" | "params" | "query" = "body"
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {

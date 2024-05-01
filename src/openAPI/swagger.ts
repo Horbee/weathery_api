@@ -7,7 +7,10 @@ import {
   me,
   resetPassword,
 } from "./user.swagger";
-import { getWeather } from "./weather.swagger";
+import {
+  getWeatherInfoByCity,
+  getWeatherForecastByCity,
+} from "./weather.swagger";
 
 export const swaggerDocument = {
   openapi: "3.0.1",
@@ -42,8 +45,11 @@ export const swaggerDocument = {
   },
   tags: [{ name: "Weather" }, { name: "User" }, { name: "Health" }],
   paths: {
-    "/api/v1/weather/{city}": {
-      get: getWeather,
+    "/api/v1/weather/city": {
+      get: getWeatherInfoByCity,
+    },
+    "/api/v1/weather/forecast": {
+      get: getWeatherForecastByCity,
     },
     "/api/v1/auth/me": {
       get: me,

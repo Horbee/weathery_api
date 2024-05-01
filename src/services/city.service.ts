@@ -11,6 +11,10 @@ const findAllCitiesByName = async (name: string): Promise<CityModel[]> => {
   return await City.find({ name: { $regex: nameReg } });
 };
 
+const findCityByName = async (name: string): Promise<Nullable<CityModel>> => {
+  return await City.findOne({ name });
+};
+
 const findAllCitiesOfUser = async (user: UserModel): Promise<CityModel[]> => {
   return await City.find({ _id: { $in: user.cities } });
 };
@@ -40,6 +44,7 @@ const removeCityFromUser = async (
 export default {
   findCityById,
   findAllCitiesByName,
+  findCityByName,
   findAllCitiesOfUser,
   attachCityToUser,
   removeCityFromUser,

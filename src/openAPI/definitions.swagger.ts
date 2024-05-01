@@ -10,6 +10,29 @@ export const modelDefinitions = {
       },
     },
   },
+  CityForecast: {
+    type: "object",
+    properties: {
+      city: {
+        type: "object",
+        properties: {
+          lat: { type: "string" },
+          lng: { type: "string" },
+        },
+      },
+    },
+  },
+  ForecastResponse: {
+    type: "object",
+    properties: {
+      success: {
+        type: "boolean",
+      },
+      data: {
+        type: "object",
+      },
+    },
+  },
   UserCreate: {
     type: "object",
     properties: {

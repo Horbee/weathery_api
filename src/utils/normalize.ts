@@ -15,7 +15,7 @@ export const normalizeCity = (city: CityModel) => {
     id: city._id,
     name: city.name,
     country: city.country,
-    state: city.state,
-    coord: city.coord,
+    lat: city.lat,
+    lng: city.lng,
   };
 };

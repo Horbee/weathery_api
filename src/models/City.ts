@@ -3,20 +3,17 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface CityModel extends Document {
   id: number;
   name: string;
-  state: string;
   country: string;
-  coord: {
-    lon: number;
-    lat: number;
-  }
+  lat: string;
+  lng: string;
 }
 
 const CitySchema = new Schema<CityModel>({
   id: Number,
   name: String,
-  state: String,
   country: String,
-  coord: Object,
+  lat: String,
+  lng: String,
 });
 
 export const City = mongoose.model<CityModel>("city", CitySchema);
