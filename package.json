@@ -45,8 +45,10 @@
     "@types/passport-google-oauth20": "^2.0.14",
     "@types/passport-jwt": "^4.0.1",
     "@types/swagger-ui-express": "^4.1.6",
+    "@types/yargs": "^17.0.32",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "yargs": "^17.7.2"
   }
 }
